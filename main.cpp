@@ -6,8 +6,8 @@ struct MyData {
 };
 
 int main() {
-    // Create a queue with 2 producers and 2 consumers
-    ProducerConsumerQueue<MyData, 2, 2> queue;
+    // Create a queue 
+    ProducerConsumerQueue<MyData> queue;
 
     // Create producer threads
     std::vector<std::thread> producerThreads;

@@ -5,7 +5,7 @@
 #include <condition_variable>
 #include <string>
 
-template <typename T, int NumProducers, int NumConsumers>
+template <typename T, int MaxQueSize = 0>
 class ProducerConsumerQueue {
 private:
     std::queue<T> dataQueue;
@@ -18,7 +18,7 @@ public:
         std::unique_lock<std::mutex> lock(mutex);
 
         // Wait for space in the queue if it's full
-        if (dataQueue.size() == NumProducers) {
+        if (MaxQueSize &&dataQueue.size() >= MaxQueSize) {
             if (timeout >= 0) {
                 if (cvProducer.wait_for(lock, std::chrono::milliseconds(timeout)) == std::cv_status::timeout) {
                     // Timeout occurred
@@ -67,7 +67,7 @@ public:
             if (timeout >= 0) {
                 if (cvConsumer.wait_for(lock, std::chrono::milliseconds(timeout)) == std::cv_status::timeout) {
                     // Timeout occurred
-                    std::cerr << "Consumer timed out." << std::endl;
+                    //std::cerr << "Consumer timed out." << std::endl;
                     return false;
                 }
             } else {
